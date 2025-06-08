@@ -21,4 +21,5 @@
 *.zip
 *.epw
 *.lock
+*.dbg
 events.out.tfevents.*

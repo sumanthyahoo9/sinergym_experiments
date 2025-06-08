@@ -191,6 +191,8 @@ def main():
                 env_params['reward'] = EnhancedLinearReward
             elif env_params['reward'] == 'LinearReward':
                 env_params['reward'] = LinearReward
+            elif env_params['reward'] == 'SAC':  # Add this line
+                env_params['reward'] = eval(env_params['reward'])
             else:
                 env_params['reward'] = eval(env_params['reward'])
             

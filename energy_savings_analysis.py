@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import gymnasium as gym
-from stable_baselines3 import PPO
+from stable_baselines3 import PPO, SAC
 import sys
 
 # Add your project path
@@ -96,7 +96,7 @@ def run_ppo_controller(model_path, episodes=1, config_path="PPO_sweep_example.ya
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model not found: {model_path}")
     
-    model = PPO.load(model_path)
+    model = SAC.load(model_path)
     print(f"  Loaded model: {model_path}")
     
     # Create environment with same config as training
