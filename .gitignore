@@ -5,6 +5,7 @@
 *.bnd
 *.dxf
 *.eio
+*.dbg
 *.err
 *.eso
 *.mdd
