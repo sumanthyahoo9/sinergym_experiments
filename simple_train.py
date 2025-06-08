@@ -187,13 +187,14 @@ def main():
                     print(f"DEBUG: Converted to tuple: {env_params['weather_variability']['Dry Bulb Temperature']}")
     
             # Handle custom reward manually
-            if 'reward' in env_params:
-                if env_params['reward'] == 'EnhancedLinearReward':
-                    # Use SinerGym internal variable names (not full EnergyPlus names)
-                    env_params['reward'] = EnhancedLinearReward
-                else:
-                    # Use eval for built-in rewards like LinearReward
-                    env_params['reward'] = eval(env_params['reward'])
+            if env_params['reward'] == 'EnhancedLinearReward':
+                env_params['reward'] = EnhancedLinearReward
+            elif env_params['reward'] == 'LinearReward':
+                env_params['reward'] = LinearReward
+            elif env_params['reward'] == 'SAC':  # Add this line
+                env_params['reward'] = eval(env_params['reward'])
+            else:
+                env_params['reward'] = eval(env_params['reward'])
             
             # Process other parameters normally
             for key, value in env_params.items():
