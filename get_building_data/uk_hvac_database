@@ -1,0 +1,178 @@
+def create_uk_hvac_equipment():
+    """
+    Create UK HVAC equipment specifications
+    """
+    
+    print("\n\n🌡️ UK HVAC EQUIPMENT DATABASE")
+    print("=" * 50)
+    
+    # Current US HVAC equipment to convert
+    us_hvac_equipment = {
+        'Coil:Heating:Electric': 'Electric resistance heating',
+        'Fan:VariableVolume': 'Variable volume supply fan',
+        'Coil:Cooling:DX:TwoSpeed': 'DX cooling coil'
+    }
+    
+    # UK HVAC equipment equivalents
+    uk_hvac_equipment = {
+        'Coil:Heating:Electric': {
+            'uk_equipment_type': 'UK_ASHP_HEATING_COIL',
+            'description': 'UK Air Source Heat Pump Heating',
+            'rated_capacity': 'Autosize',
+            'rated_cop': 3.2,  # UK heat pump COP
+            'rated_air_flow_rate': 'Autosize',
+            'efficiency_curve': 'UK_ASHP_Heating_Performance',
+            'min_outdoor_temp': -15.0,  # °C - UK climate
+            'defrost_strategy': 'ReverseCycle',
+            'source': 'BEIS Heat Pump Performance',
+            'compliance': 'MCS Standards'
+        },
+        'Fan:VariableVolume': {
+            'uk_equipment_type': 'UK_EC_SUPPLY_FAN',
+            'description': 'UK EC Motor Variable Volume Fan',
+            'motor_efficiency': 0.85,  # EU motor efficiency standards
+            'total_efficiency': 0.65,
+            'pressure_rise': 600.0,    # Pa - typical UK system
+            'maximum_flow_rate': 'Autosize',
+            'minimum_flow_fraction': 0.2,
+            'fan_power_minimum_flow_rate_fraction': 0.25,
+            'source': 'ErP Directive 2009/125/EC',
+            'compliance': 'HVCA DW144'
+        },
+        'Coil:Cooling:DX:TwoSpeed': {
+            'uk_equipment_type': 'UK_ASHP_COOLING_COIL',
+            'description': 'UK Air Source Heat Pump Cooling',
+            'rated_total_cooling_capacity': 'Autosize',
+            'rated_sensible_heat_ratio': 0.75,
+            'rated_cop': 3.5,  # UK cooling COP
+            'rated_air_flow_rate': 'Autosize',
+            'condenser_type': 'AirCooled',
+            'minimum_outdoor_temperature': 5.0,  # °C - UK climate
+            'performance_curve': 'UK_ASHP_Cooling_Performance',
+            'source': 'AHRI Standards (EU)',
+            'compliance': 'F-Gas Regulations'
+        }
+    }
+    
+    # Print HVAC conversion table
+    print("\n📊 HVAC EQUIPMENT CONVERSION:")
+    print("-" * 80)
+    
+    for us_equip, uk_data in uk_hvac_equipment.items():
+        print(f"\n🔧 {us_equip}")
+        print(f"   → {uk_data['uk_equipment_type']}")
+        print(f"   Description: {uk_data['description']}")
+        
+        # Show key performance parameters
+        key_params = ['rated_cop', 'motor_efficiency', 'rated_sensible_heat_ratio']
+        for param in key_params:
+            if param in uk_data:
+                print(f"   {param}: {uk_data[param]}")
+        
+        print(f"   Source: {uk_data['source']}")
+        print(f"   Compliance: {uk_data['compliance']}")
+    
+    return uk_hvac_equipment
+
+def create_uk_operational_schedules():
+    """
+    Create UK-specific operational schedules
+    """
+    
+    print("\n\n📅 UK OPERATIONAL SCHEDULES")
+    print("=" * 50)
+    
+    # UK office operating patterns
+    uk_schedules = {
+        'office_occupancy': {
+            'description': 'UK Office Occupancy Pattern',
+            'weekday_schedule': {
+                '00:00-07:00': 0.0,    # Unoccupied
+                '07:00-08:00': 0.1,    # Early arrivals
+                '08:00-09:00': 0.5,    # Morning arrival
+                '09:00-12:00': 0.9,    # Morning peak
+                '12:00-13:00': 0.7,    # Lunch break
+                '13:00-17:00': 0.9,    # Afternoon peak
+                '17:00-18:00': 0.5,    # Evening departure
+                '18:00-24:00': 0.1     # Late workers
+            },
+            'weekend_schedule': {
+                '00:00-24:00': 0.05    # Minimal weekend occupation
+            },
+            'source': 'CIBSE Guide A'
+        },
+        'office_lighting': {
+            'description': 'UK Office Lighting Schedule',
+            'weekday_schedule': {
+                '00:00-07:00': 0.1,    # Security lighting
+                '07:00-08:00': 0.3,    # Early morning
+                '08:00-17:00': 0.9,    # Full operation
+                '17:00-19:00': 0.6,    # Evening wind down
+                '19:00-24:00': 0.2     # Cleaning/security
+            },
+            'weekend_schedule': {
+                '00:00-24:00': 0.1     # Minimal lighting
+            },
+            'source': 'CIBSE Lighting Guide'
+        },
+        'office_equipment': {
+            'description': 'UK Office Equipment Schedule',
+            'weekday_schedule': {
+                '00:00-07:00': 0.2,    # Standby power
+                '07:00-09:00': 0.5,    # Morning startup
+                '09:00-17:00': 0.8,    # Full operation
+                '17:00-19:00': 0.4,    # Shutdown
+                '19:00-24:00': 0.2     # Standby
+            },
+            'weekend_schedule': {
+                '00:00-24:00': 0.15    # Weekend standby
+            },
+            'source': 'Carbon Trust'
+        },
+        'heating_setpoints': {
+            'description': 'UK Heating Temperature Setpoints',
+            'occupied_heating': 19.0,      # °C - UK comfort standard
+            'unoccupied_heating': 15.0,    # °C - Energy saving
+            'weekend_heating': 16.0,       # °C - Reduced weekend
+            'source': 'CIBSE Guide A',
+            'compliance': 'Building Regulations Part L'
+        },
+        'cooling_setpoints': {
+            'description': 'UK Cooling Temperature Setpoints', 
+            'occupied_cooling': 24.0,      # °C - UK comfort standard
+            'unoccupied_cooling': 28.0,    # °C - Energy saving
+            'weekend_cooling': 26.0,       # °C - Reduced weekend
+            'source': 'CIBSE Guide A',
+            'compliance': 'BREEAM Standards'
+        }
+    }
+    
+    # Print schedule summaries
+    for schedule_name, schedule_data in uk_schedules.items():
+        print(f"\n📋 {schedule_name.upper()}:")
+        print(f"   Description: {schedule_data['description']}")
+        print(f"   Source: {schedule_data['source']}")
+        
+        if 'weekday_schedule' in schedule_data:
+            print("   Weekday pattern:")
+            for time_period, value in schedule_data['weekday_schedule'].items():
+                print(f"     {time_period}: {value}")
+        
+        if 'occupied_heating' in schedule_data:
+            print(f"   Occupied: {schedule_data['occupied_heating']}°C")
+            print(f"   Unoccupied: {schedule_data['unoccupied_heating']}°C")
+    
+    return uk_schedules
+
+if __name__ == "__main__":
+    # Run Step 4
+    uk_hvac = create_uk_hvac_equipment()
+    uk_schedules = create_uk_operational_schedules()
+
+    print("\n\n✅ UK DATA PREPARATION COMPLETE")
+    print("=" * 50)
+    print("📦 UK Materials: Ready for conversion")
+    print("🏗️ UK Constructions: Ready for conversion") 
+    print("🌡️ UK HVAC Equipment: Ready for conversion")
+    print("📅 UK Schedules: Ready for conversion")
+    print("\n🎯 Next Steps: Generate new UK epJSON file")
