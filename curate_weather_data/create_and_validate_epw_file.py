@@ -1,6 +1,6 @@
 import pandas as pd
 from get_location_coordinates import get_coordinates
-from get_weather_data import get_uk_weather_data
+from curate_weather_data import get_uk_weather_data
 
 def create_epw_file(weather_data, lat, lon, output_filename="Macclesfield_UK_2023.epw"):
     """
