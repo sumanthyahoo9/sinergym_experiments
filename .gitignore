@@ -23,4 +23,5 @@
 *.epw
 *.lock
 *.dbg
+*.log
 events.out.tfevents.*

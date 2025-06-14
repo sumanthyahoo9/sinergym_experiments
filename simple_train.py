@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 import os
+import torch
 from datetime import datetime
 
 import gymnasium as gym
@@ -22,6 +23,20 @@ from sinergym.utils.constants import *
 from sinergym.utils.logger import TerminalLogger
 from sinergym.utils.rewards import *
 from sinergym.utils.wrappers import *
+
+def check_gpu_availability():
+    """
+    Check if there's a GPU for usage
+    """
+    if torch.cuda.is_available():
+        device = torch.cuda.get_device_name(0)
+        print(f"🚀 GPU available: {device}")
+        print(f"   GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
+        return 'cuda'
+    else:
+        print("⚠️  No GPU available, using CPU")
+        return 'cpu'
+
 
 class EnhancedLinearReward(LinearReward):
     """Enhanced LinearReward that uses more of the 17 observation variables"""
@@ -220,11 +235,13 @@ def main():
                 env = wrapper_class(env=env, **wrapper_params)
 
         logger.info("Environment and wrappers configured successfully")
+        device = check_gpu_availability()
 
         # ---------------------------------------------------------------------------- #
         #                           DRL model initialization                           #
         # ---------------------------------------------------------------------------- #
         algorithm_parameters = process_algorithm_parameters(config.get('algorithm_parameters', {}))
+        algorithm_parameters['device'] = device  # Force detected device
         algorithm_class = eval(config['algorithm'])
 
         # Set seed in algorithm parameters if provided
@@ -232,7 +249,8 @@ def main():
             algorithm_parameters['seed'] = config['seed']
 
         logger.info(f"Initializing {config['algorithm']} algorithm")
-        model = algorithm_class(env=env, **algorithm_parameters)
+        if config.get('model', None) is None:
+            model = algorithm_class(env=env, **algorithm_parameters)
 
         # ---------------------------------------------------------------------------- #
         #                          Application of callback(s)                          #
