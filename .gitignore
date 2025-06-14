@@ -24,4 +24,5 @@
 *.lock
 *.dbg
 *.log
+*.json
 events.out.tfevents.*
