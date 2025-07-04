@@ -25,4 +25,6 @@
 *.dbg
 *.log
 *.json
+*.pdf
+*.ddy
 events.out.tfevents.*
