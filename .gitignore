@@ -26,5 +26,6 @@
 *.log
 *.json
 *.pdf
+*.npz
 *.ddy
 events.out.tfevents.*
