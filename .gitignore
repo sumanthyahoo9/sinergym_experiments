@@ -23,4 +23,8 @@
 *.lock
 *.dbg
 *.log
+*.pdf
+*.ddy
+*.json
+sinergym_config.json
 events.out.tfevents.*

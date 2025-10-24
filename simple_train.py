@@ -3,17 +3,18 @@ import logging
 import sys
 import os
 import torch
+import torch.nn as nn
 from datetime import datetime
 
 import gymnasium as gym
 import numpy as np
 import yaml
+from stable_baselines3.common.callbacks import CallbackList
+from stable_baselines3.sac.policies import SACPolicy
 from stable_baselines3 import A2C, DDPG, DQN, PPO, SAC, TD3
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.callbacks import CallbackList
 sys.path.append(".")
 # Make it available globally for eval()
-import sinergym
 from sinergym.utils.common import (
     is_wrapped,
     process_algorithm_parameters,
@@ -37,6 +38,27 @@ def check_gpu_availability():
         print("⚠️  No GPU available, using CPU")
         return 'cpu'
 
+class DropoutSACPolicy(SACPolicy):
+    """SAC Policy with dropout for uncertainty estimation"""
+    
+    def __init__(self, *args, dropout_rate=0.1, **kwargs):
+        self.dropout_rate = dropout_rate
+        super().__init__(*args, **kwargs)
+    
+    def make_actor(self, features_extractor=None):
+        """Add dropout layers to actor network"""
+        actor = super().make_actor(features_extractor)
+        
+        # Insert dropout after each activation
+        new_layers = []
+        for i, layer in enumerate(actor.latent_pi):
+            new_layers.append(layer)
+            # Add dropout after ReLU activations (odd indices)
+            if i % 2 == 1:  
+                new_layers.append(nn.Dropout(p=self.dropout_rate))
+        
+        actor.latent_pi = nn.Sequential(*new_layers)
+        return actor
 
 class EnhancedLinearReward(LinearReward):
     """Enhanced LinearReward that uses more of the 17 observation variables"""
@@ -250,6 +272,14 @@ def main():
 
         logger.info(f"Initializing {config['algorithm']} algorithm")
         if config.get('model', None) is None:
+            # Use dropout policy if training SAC with dropout
+            if config['algorithm'] == 'SAC' and config.get('use_dropout', False):
+                logger.info("Using SAC with Dropout layers")
+                algorithm_parameters['policy'] = DropoutSACPolicy
+                algorithm_parameters['policy_kwargs'] = {
+                    'dropout_rate': config.get('dropout_rate', 0.1),
+                    'net_arch': [256, 256]
+                }
             model = algorithm_class(env=env, **algorithm_parameters)
 
         # ---------------------------------------------------------------------------- #
