@@ -26,5 +26,8 @@
 *.pdf
 *.ddy
 *.json
+*.pth
 sinergym_config.json
+_stable_baselines3_version
+data
 events.out.tfevents.*
