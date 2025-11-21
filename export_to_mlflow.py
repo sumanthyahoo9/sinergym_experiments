@@ -24,7 +24,7 @@ DATABRICKS_HOST = "https://dbc-9e9c29a5-e035.cloud.databricks.com"
 DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")  # Set this as environment variable
 
 # Model paths
-PRODUCTION_MODEL_DIR = "/home/sumanthmurthy/sinergym_experiments/SAC-Eplus-5zone-hot-continuous-stochastic-v1-episodes-100_2025-10-05_04-34-res1/evaluation/"
+PRODUCTION_MODEL_DIR = "/home/sumanthmurthy/sinergym_experiments/extracted/"
 # Unity Catalog requires: catalog.schema.model format
 REGISTERED_MODEL_NAME = "optivai_hvac_rl_model.default.hvac_rl_model"
 
@@ -53,7 +53,7 @@ def log_production_model():
     
     model_dir = Path(PRODUCTION_MODEL_DIR)
     
-    with mlflow.start_run(run_name="optivai_hvac_rl_model_testing_v2") as run:
+    with mlflow.start_run(run_name="optivai_hvac_rl_model_testing_v4") as run:
         
         # Log all model artifacts (.pth files) - these are just artifacts, not the "model"
         for file in model_dir.glob("*.pth"):
