@@ -1,3 +1,10 @@
+"""
+Run this script to train a new policy and initiate automatic shutdown
+Example usage:
+nohup python training_with_shutdown.py > training_$(date +%Y%m%d_%H%M%S).log 2>&1 &
+The PID is displayed and note it down
+Current PID: 7601
+"""
 import subprocess
 import os
 import time
@@ -32,5 +39,5 @@ def run_training_with_shutdown(config_file):
         time.sleep(300)  # Check every 5 minutes
 
 if __name__ == "__main__":
-    CONFIG_FILE = "SAC_sweep_example.yaml"
+    CONFIG_FILE = "policy_configs/SAC_sweep_v2.yaml"
     run_training_with_shutdown(CONFIG_FILE)
