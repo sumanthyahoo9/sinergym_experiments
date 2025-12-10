@@ -5,6 +5,7 @@
 *.bnd
 *.dxf
 *.eio
+*.dbg
 *.err
 *.eso
 *.mdd
@@ -23,6 +24,8 @@
 *.lock
 *.dbg
 *.log
+*.json
+events.out.tfevents.*
 *.pdf
 *.ddy
 *.json
