@@ -30,6 +30,7 @@ events.out.tfevents.*
 *.ddy
 *.json
 *.pth
+*.pkl
 sinergym_config.json
 _stable_baselines3_version
 data
